@@ -1,6 +1,7 @@
 ## Installation
+    git clone https://github.com/Arkadiy-Garber/KOALA-formatter.git
 
-
+Put KO-convert-script.py in your $PATH
 
 ## Basic usage
     KO-convert-script.py -db KO_Orthology_ko00001.txt -ko user_ko_definition.txt -taxa user.out.top -out ghostokoala-summary.csv
