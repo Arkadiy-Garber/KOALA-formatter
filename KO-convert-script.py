@@ -4,6 +4,7 @@
 from collections import defaultdict
 import textwrap
 import argparse
+import re
 
 
 def replace(stringOrlist, list, item):
@@ -45,15 +46,43 @@ for i in koFile:
 
 
 db = open(args.db, "r")
-dbDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+dbDict = defaultdict(lambda: defaultdict(list))
 for i in db:
     ls = i.rstrip().split("\t")
     ko = (ls[3].split("  ")[0])
     name = (ls[3].split("  ")[1])
-    dbDict[ko]["system"] = ls[0]
-    dbDict[ko]["family"] = ls[1]
-    dbDict[ko]["path"] = ls[2]
-    dbDict[ko]["name"] = name
+    if ls[0] not in dbDict[ko]["system"]:
+        dbDict[ko]["system"].append(ls[0])
+
+    if ls[1] not in dbDict[ko]["system"]:
+        dbDict[ko]["family"].append(ls[1])
+
+    if ls[2] not in dbDict[ko]["system"]:
+        dbDict[ko]["path"].append(ls[2])
+
+    if name not in dbDict[ko]["name"]:
+        dbDict[ko]["name"].append(name)
+
+
+dbDict2 = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
+for i in dbDict.keys():
+    string = []
+    for j in dbDict[i]["system"]:
+        string.append(j)
+    STRING = " ||| ".join(string)
+    dbDict2[i]["system"] = STRING
+
+    for j in dbDict[i]["family"]:
+        string.append(j)
+    STRING = " ||| ".join(string)
+    dbDict2[i]["family"] = STRING
+
+    for j in dbDict[i]["path"]:
+        string.append(j)
+    STRING = " ||| ".join(string)
+    dbDict2[i]["path"] = STRING
+
+    dbDict2[i]["name"] = dbDict[i]["name"][0]
 
 
 taxaDict = defaultdict(lambda: defaultdict(lambda: 'EMPTY'))
@@ -85,14 +114,14 @@ for i in sorted(KO.keys()):
     orf = i
     ko = (KO[i]["ko"])
     annotation = (KO[i]["name"])
+
     if args.taxa != "NA":
         out.write(
-            orf + "," + ko + "," + replace(dbDict[ko]["path"], [","], ";") + "," + replace(dbDict[ko]["family"], [","],
-                                                                                           ";") + "," + replace(
-                dbDict[ko]["system"], [","], ";") + ","
-            + replace(dbDict[ko]["name"], [","], ";") + "," + taxaDict[orf]["taxa1"] + "," + taxaDict[orf]["taxa2"] + "," + taxaDict[orf]["taxa3"] + "\n")
+            orf + "," + ko + "," + replace(dbDict2[ko]["path"], [","], ";") + "," + replace(dbDict2[ko]["family"], [","], ";") + "," + replace(
+                dbDict2[ko]["system"], [","], ";") + "," + replace(dbDict2[ko]["name"], [","], ";") + "," + taxaDict[orf]["taxa1"] + "," + taxaDict[orf]["taxa2"] + "," + taxaDict[orf]["taxa3"] + "\n")
+
     else:
-        out.write(orf + "," + ko + "," + replace(dbDict[ko]["path"], [","], ";") + "," + replace(dbDict[ko]["family"], [","], ";") + "," + replace(dbDict[ko]["system"], [","], ";") + ","
-                  + replace(dbDict[ko]["name"], [","], ";") + "\n")
+        out.write(orf + "," + ko + "," + replace(dbDict2[ko]["path"], [","], ";") + "," + replace(dbDict2[ko]["family"], [","], ";") + "," + replace(dbDict2[ko]["system"], [","], ";") + ","
+                  + replace(dbDict2[ko]["name"], [","], ";") + "\n")
 out.close()
 
