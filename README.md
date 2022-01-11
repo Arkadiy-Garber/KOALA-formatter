@@ -4,7 +4,7 @@
 Put KO-convert-script.py in your $PATH
 
 ## Basic usage
-    KO-convert-script.py -db KO_Orthology_ko00001.txt -ko user_ko_definition.txt -taxa user.out.top -out ghostokoala-summary.csv
+    ./KO-convert-script.py -db KO_Orthology_ko00001.txt -ko user_ko_definition.txt -taxa user.out.top -out ghostokoala-summary.csv
     
 KO_Orthology_ko00001.txt can be found in this repository. This file contains gene and pathway information for every KO number. This file is sourced from Elaina Graham GhostKoalaParser repo: https://github.com/edgraham/GhostKoalaParser
 
