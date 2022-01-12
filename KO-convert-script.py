@@ -91,7 +91,10 @@ if args.taxa != "NA":
     for i in taxa:
         ls = i.rstrip().split("\t")
         orf = ls[0]
-        orf = orf.split(":")[1]
+        try:
+            orf = orf.split(":")[1]
+        except IndexError:
+            pass
         taxa1 = ls[2]
         taxa2 = ls[3]
         taxa3 = ls[4]
